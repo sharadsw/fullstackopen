@@ -140,7 +140,7 @@ const App = () => {
       contactService
         .remove(removePerson.id)
         .then(res => {
-          console.log(res.status);
+          // console.log(res.status);
           setPersons(persons.filter(p => removePerson.id !== p.id))
           setFilteredPersons(filteredPersons.filter(p => removePerson.id !== p.id))
 

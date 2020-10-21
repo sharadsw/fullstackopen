@@ -1,10 +1,10 @@
-const { response, request } = require('express')
+const cors = require('cors')
 const express = require('express')
-const app = express()
-
-app.use(express.json())
-
 const morgan = require('morgan')
+
+const app = express()
+app.use(cors())
+app.use(express.json())
 app.use(morgan('tiny'))
 
 let persons = [
@@ -86,7 +86,7 @@ app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     persons = persons.filter(person => person.id !== id)
 
-    response.status(204).end
+    response.status(204).end()
 })
 
 app.get('/info', (request, response) => {
@@ -97,7 +97,7 @@ const generateId = (max) => {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })
