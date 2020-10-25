@@ -83,6 +83,7 @@ const App = () => {
         name: newName,
         number: newNumber,
     }
+    // person already exists, just need to update
     if (persons.findIndex(person => person.name === newName) !== -1) {
         if (window.confirm(`${newName} is already in the phonebook, update number?`)) {
           const updatePerson = persons.find(p => p.name === newPerson.name)

@@ -1,1 +1,3 @@
-DELETE https://fast-retreat-93655.herokuapp.com/api/persons/2
+// DELETE https://fast-retreat-93655.herokuapp.com/api/persons/2
+
+DELETE http://localhost:3001/api/persons/5f92ff0d57716b7f09b86c95
