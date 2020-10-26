@@ -3,6 +3,6 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Frank Lampard",
-    "number": "08-08-08777"
+    "name": "test test test",
+    "number": "123123124124234"
 }

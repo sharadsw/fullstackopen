@@ -1,7 +1,7 @@
-PUT http://localhost:3001/api/persons/5f92ff34189512806fe5194f
+PUT http://localhost:3001/api/persons/5f95a885487b4370d9bb0966
 Content-Type: application/json
 
 {
     "name": "Frank Lampard",
-    "number": "777"
+    "number": "77"
 }

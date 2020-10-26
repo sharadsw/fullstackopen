@@ -34,20 +34,12 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber] = useState('')
   const [ filterData, setFilterData ] = useState('')
-  const [ filteredPersons, setFilteredPersons ] = useState([])
+  // const [ filteredPersons, setFilteredPersons ] = useState([])
 
   const [ errorMsg, setErrorMsg ] = useState(null)
   const [ alertMsg, setAlertMsg ] = useState(null)
 
   useEffect(() => {
-    // console.log("effect defined");
-    // axios
-    //   .get('http://localhost:3001/persons')
-    //   .then(response => {
-    //     // console.log("response received");
-    //     setPersons(response.data)
-    //   })
-
     contactService
       .getAll()
       .then(initialPersons => {
@@ -57,16 +49,14 @@ const App = () => {
 
   const handleFilter = (event) => {
     setFilterData(event.target.value);
-    
-    if (event.target.value === '') {
-      setFilteredPersons([]);
-      return
-    }
 
+    // COMMENTS BELOW ARE KEPT FOR FUTURE REFERENCE FOR MYSELF
+    // filteredPersons has been removed as a state as it is unnecessary
+    //
     // if you use filterData below for filtering, 
     // it creates some kind of weird dependency between states
     // and filter doesn't work properly
-    setFilteredPersons(persons.filter( person => person.name.toLowerCase().includes(event.target.value.toLowerCase())));
+    // setFilteredPersons(persons.filter( person => person.name.toLowerCase().includes(event.target.value.toLowerCase())));
   }
 
   const handleNewName = (event) => {
@@ -91,26 +81,18 @@ const App = () => {
             .update(updatePerson.id, newPerson)
             .then(returnedPerson => {
               setPersons(persons.map(p => p.id === returnedPerson.id ? returnedPerson : p))
-              setFilteredPersons(filteredPersons.map(p => p.id === returnedPerson.id ? returnedPerson : p))
-
-              setAlertMsg(
-                `${returnedPerson.name}'s number was changed to ${returnedPerson.number}`
-              )
-              setTimeout(() => {
-                setAlertMsg(null)
-              }, 5000)
+              // setFilteredPersons(filteredPersons.map(p => p.id === returnedPerson.id ? returnedPerson `: p))
+              notify(`${returnedPerson.name}'s number was changed to ${returnedPerson.number}`, 'alert')
             })
             .catch(err => {
               console.log('error in update');
-              setPersons(persons.filter(p => p.id !== updatePerson.id))
-              setFilteredPersons(filteredPersons.filter(p => p.id !== updatePerson.id))
-
-              setErrorMsg(
-                `${updatePerson.name} was already removed from the phonebook`
-              )
-              setTimeout(() => {
-                setErrorMsg(null)
-              }, 5000)
+              if (err.response) {
+                notify(err.response.data.error, 'error')
+              } else {
+                setPersons(persons.filter(p => p.id !== updatePerson.id))
+                // setFilteredPersons(filteredPersons.filter(p => p.id !== updatePerson.id))
+                notify(`${updatePerson.name} was already removed from the phonebook`, 'error')
+              }
             })
         }
         return
@@ -124,13 +106,10 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName('');
         setNewNumber('');
-
-        setAlertMsg(
-          `${returnedPerson.name} was added to the phonebook`
-        )
-        setTimeout(() => {
-          setAlertMsg(null)
-        }, 5000)
+        notify(`${returnedPerson.name} was added to the phonebook`, 'alert')
+      })
+      .catch(error => {
+        notify(error.response.data.error, 'error')
       })
   }
 
@@ -143,28 +122,36 @@ const App = () => {
         .then(res => {
           // console.log(res.status);
           setPersons(persons.filter(p => removePerson.id !== p.id))
-          setFilteredPersons(filteredPersons.filter(p => removePerson.id !== p.id))
-
-          setAlertMsg(
-            `${removePerson.name} was removed from the phonebook`
-          )
-          setTimeout(() => {
-            setAlertMsg(null)
-          }, 5000)
+          // setFilteredPersons(filteredPersons.filter(p => removePerson.id !== p.id))
+          notify(`${removePerson.name} was removed from the phonebook`, 'alert')
         })
         .catch(err => {
           console.log('error caught in delete')
           setPersons(persons.filter(p => p.id !== removePerson.id))
-          setFilteredPersons(filteredPersons.filter(p => p.id !== removePerson.id))
-          setErrorMsg(
-            `${removePerson.name} was already removed from the phonebook`
-          )
-          setTimeout(() => {
-            setErrorMsg(null)
-          }, 5000)
+          // setFilteredPersons(filteredPersons.filter(p => p.id !== removePerson.id))
+          notify(`${removePerson.name} was already removed from the phonebook`, 'error')
         })
     }
   }
+
+  const notify = (msg, type) => {
+    if (type === 'alert') {
+      setAlertMsg(msg)
+      setTimeout(() => {
+        setAlertMsg(null)
+      }, 5000)
+    }
+
+    if (type === 'error') {
+      setErrorMsg(msg)
+      setTimeout(() => {
+        setErrorMsg(null)
+      }, 5000)
+    }
+  }
+
+  const personsToShow = filterData === '' ? persons : 
+            persons.filter(person => person.name.toLowerCase().includes(filterData))
 
   return (
     <div>
@@ -177,7 +164,7 @@ const App = () => {
         handleNewName={handleNewName} handleNewNumber={handleNewNumber}
         handleNewPerson={handleNewPerson} />
       <h2>Numbers</h2>
-      <PersonsData persons={filterData === '' ? persons : filteredPersons} removeEvent={handleRemovePerson} />
+      <PersonsData persons={personsToShow} removeEvent={handleRemovePerson} />
     </div>
   )
 }
