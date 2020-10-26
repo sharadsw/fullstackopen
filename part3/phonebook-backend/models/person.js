@@ -3,14 +3,14 @@ const uniqueValidator = require('mongoose-unique-validator')
 
 const url = process.env.MONGODB_URI
 
-console.log('connecting to db', url);
+console.log('connecting to db', url)
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-    .then(result => {
-        console.log('connected to mongodb');
+    .then(() => {
+        console.log('connected to mongodb')
     })
     .catch(error => {
-        console.log('error in connection', error.message);
+        console.log('error in connection', error.message)
     })
 
 const phonebookSchema = new mongoose.Schema({

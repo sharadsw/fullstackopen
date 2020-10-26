@@ -1,2 +1,2 @@
-// GET https://fast-retreat-93655.herokuapp.com/api/persons
-GET http://localhost:3001/api/persons
+GET https://fast-retreat-93655.herokuapp.com/api/persons
+//GET http://localhost:3001/api/persons

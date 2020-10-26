@@ -1,6 +1,5 @@
 require('dotenv').config()
 const cors = require('cors')
-const { response, request } = require('express')
 const express = require('express')
 const morgan = require('morgan')
 const Person = require('./models/person')
@@ -15,7 +14,7 @@ app.use(morgan('tiny'))
 // INDEX PAGE
 //
 app.get('/', (request, response) => {
-    console.log('reached /');
+    console.log('reached /')
     response.send('<h1>Hello world</h1>')
 })
 
@@ -74,7 +73,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 //
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
-        .then(result => {
+        .then(() => {
             response.status(204).end()
         })
         .catch(error => {
@@ -131,7 +130,7 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-    console.log(error.message);
+    console.log(error.message)
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
@@ -148,5 +147,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`)
 })
