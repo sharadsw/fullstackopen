@@ -56,6 +56,9 @@ const blogs = [
   }  
 ]
 
+const validId = '5a422a851b54a676234d17f7'
+const invalidId = '5a422a851b54a676234d17f8'
+
 beforeEach(async () => {
   await Blog.deleteMany({})
 
@@ -138,6 +141,49 @@ describe('POST requests', () => {
 
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(blogs.length)
+  })
+})
+
+describe('DELETE requests', () => {
+  test('valid id', async () => {
+    await api
+      .delete(`/api/blogs/${validId}`)
+      .expect(204)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(blogs.length - 1)
+  })
+
+  test('invalid id', async () => {
+    await api
+      .delete(`/api/blogs/${invalidId}`)
+      .expect(204)
+  })
+})
+
+describe('PUT requests', () => {
+  const update = {
+    likes: 10
+  }
+
+  test('valid id', async () => {
+    await api
+      .put(`/api/blogs/${validId}`)
+      .send(update)
+      .expect(200)
+  })
+
+  test('likes missing in body', async () => {
+    await api
+      .put(`/api/blogs/${validId}`)
+      .expect(400)
+  })
+
+  test('invalid id', async () => {
+    await api
+      .put(`/api/blogs/${invalidId}`)
+      .send(update)
+      .expect(404)
   })
 })
 
