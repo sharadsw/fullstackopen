@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 
 logger.info('Connecting to mongo')
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-  .then(result => {
+  .then(() => {
     logger.info('Connected')
   })
   .catch(error => {
