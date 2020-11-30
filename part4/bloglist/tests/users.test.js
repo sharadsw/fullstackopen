@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const mongoose = require('mongoose')
 
 const helper = require('./tests_helper')
 
@@ -46,4 +47,42 @@ describe('when there is only one user in db', () => {
     expect(finalUsers).toHaveLength(initialUsers.length + 1)
     expect(finalUsers.map(u => u.username)).toContain(newUser.username)
   })
+
+  test('password has to be 3 chars long', async () => {
+    const initialUsers = await helper.usersInDb()
+
+    const invalidUser = {
+      username: 'useruser',
+      name: 'John Smith',
+      password: 'me'
+    }
+
+    const response = await api.post('/api/users').send(invalidUser)
+
+    const finalUsers = await helper.usersInDb()
+
+    expect(response.status).toEqual(400)
+    expect(finalUsers).toHaveLength(initialUsers.length)
+  })
+
+  test('username has to be 3 chars long', async () => {
+    const initialUsers = await helper.usersInDb()
+
+    const invalidUser = {
+      username: 'us',
+      name: 'John Smith',
+      password: 'hellohello'
+    }
+
+    const response = await api.post('/api/users').send(invalidUser)
+
+    const finalUsers = await helper.usersInDb()
+
+    expect(response.status).toEqual(400)
+    expect(finalUsers).toHaveLength(initialUsers.length)
+  })
+})
+
+afterAll(() => {
+  mongoose.connection.close()
 })
