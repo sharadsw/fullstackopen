@@ -81,6 +81,46 @@ describe('when there is only one user in db', () => {
     expect(response.status).toEqual(400)
     expect(finalUsers).toHaveLength(initialUsers.length)
   })
+
+  test('username has to be unique', async () => {
+    const initialUsers = await helper.usersInDb()
+
+    const invalidUser = {
+      username: 'root',
+      name: 'John Smith',
+      password: 'hellohello'
+    }
+
+    const response = await api.post('/api/users').send(invalidUser)
+
+    const finalUsers = await helper.usersInDb()
+
+    expect(response.status).toEqual(400)
+    expect(finalUsers).toHaveLength(initialUsers.length)
+  })
+
+  test('missing password or username', async () => {
+    const initialUsers = await helper.usersInDb()
+
+    const missingUsername = {
+      name: 'John Smith',
+      password: 'hellohello'
+    }
+
+    const missingPass = {
+      username: 'root',
+      name: 'John Smith'
+    }
+
+    const response = await api.post('/api/users').send(missingUsername)
+    expect(response.status).toEqual(400)
+
+    const response2 = await api.post('/api/users').send(missingPass)
+    expect(response2.status).toEqual(400)
+
+    const finalUsers = await helper.usersInDb()
+    expect(finalUsers).toHaveLength(initialUsers.length)
+  })
 })
 
 afterAll(() => {
