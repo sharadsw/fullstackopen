@@ -61,6 +61,25 @@ const blogs = [
 const validId = '5a422a851b54a676234d17f7'
 const invalidId = '5a422a851b54a676234d17f8'
 
+beforeAll(async () => {
+  await User.deleteMany({})
+  const user = new User({
+    username: 'root',
+    name: 'root',
+    password: 'pass'
+  })
+
+  await user.save()
+
+  const response = await api
+    .post('/api/login')
+    .send({ username: 'root', password: 'pass' })
+  console.log('LOOK LOOK LOOK LOOK LOOK LOOK LOOK', response.body)
+
+  // this isn't working
+  // i'll probably try to skip
+})
+
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -96,16 +115,6 @@ describe('GET requests', () => {
 })
 
 describe('POST requests', () => {
-  beforeAll(async () => {  
-    const response = await api
-      .post('/api/login')
-      .send({ username: 'root', password: 'pass' })
-    console.log('LOOK LOOK LOOK LOOK LOOK LOOK LOOK', response)
-
-    // this isn't working
-    // i'll probably try to skip
-  })
-
   test('a new blog is added', async () => {
     const newBlog = {
       title: 'Attack the day',
