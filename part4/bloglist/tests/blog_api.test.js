@@ -5,6 +5,8 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
 const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
@@ -53,11 +55,12 @@ const blogs = [
     url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
     likes: 2,
     __v: 0
-  }  
+  }
 ]
 
 const validId = '5a422a851b54a676234d17f7'
 const invalidId = '5a422a851b54a676234d17f8'
+
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -93,6 +96,16 @@ describe('GET requests', () => {
 })
 
 describe('POST requests', () => {
+  beforeAll(async () => {  
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'pass' })
+    console.log('LOOK LOOK LOOK LOOK LOOK LOOK LOOK', response)
+
+    // this isn't working
+    // i'll probably try to skip
+  })
+
   test('a new blog is added', async () => {
     const newBlog = {
       title: 'Attack the day',
