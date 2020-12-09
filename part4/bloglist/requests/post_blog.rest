@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoYXJhZCIsImlkIjoiNWZjZjkwNTQ3Nzg1ZThmZmEwMzAwNDVmIiwiaWF0IjoxNjA3NDQwNzM3fQ.tXM3oNqEyYlhIC6AFX__hWPHrBycP6i0ciMOkf_O2H4
 
 {
-    "title": "Add blog with auth & token middleware",
+    "title": "Testing delete",
     "author": "Mark Zuckerberg",
     "url": "www.google.com",
     "likes": 20
