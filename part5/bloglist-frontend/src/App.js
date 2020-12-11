@@ -89,7 +89,6 @@ const App = () => {
   const handleLogin = () => {
     loginService.login({ username, password, })
       .then(loggedUser => {
-        console.log(loggedUser);
         setUser(loggedUser)
         setUsername('')
         setPassword('')
