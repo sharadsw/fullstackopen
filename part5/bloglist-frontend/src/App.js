@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import Blog from './components/Blog'
+import BlogList from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 
@@ -8,73 +8,6 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 import './App.css'
-
-// struggling with the event handlers
-// const BlogForm = ({ title, handleTitle, author, handleAuthor, url, handleUrl }) => {
-//   return (
-//     <form>
-//       <div>
-//         title: <input value={title} onChange={({ target }) => handleTitle(target.value)} />
-//       </div>
-//       <div>
-//         author: <input value={author} onChange={({ target }) => handleAuthor(target.value)} />
-//       </div>
-//       <div>
-//         url: <input value={url} onChange={({ target }) => handleUrl(target.value)} />
-//       </div>
-//       <button type="submit">create</button>
-//     </form>
-//   )
-// }
-
-const BlogList = ({ username, blogs, handleLogout, handleBlogs, notify }) => {
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
-  const handleCreate = async (event) => {
-    event.preventDefault()
-    if (title === '' || author  === '' || url === '') {
-      notify('One of the inputs is empty', 'error')
-      return
-    }
-    try {
-      const response = await blogService.create({ title, author, url })
-      handleBlogs(response)
-      notify(`New blog added: ${title} - by ${author}`, 'alert')
-      setTitle('')
-      setUrl('')
-      setAuthor('')
-    } catch (ex) {
-      notify(ex, 'error')
-    }
-  }
-
-  return (
-    <div>
-      <h1>welcome, {username}</h1>
-      <button onClick={handleLogout}>logout</button>
-      <h2>create new blog</h2>
-      <form onSubmit={handleCreate}>
-        <div>
-          title: <input type="text" value={title} onChange={({ target }) => setTitle(target.value)} />
-        </div>
-        <div>
-          author: <input type="text" value={author} onChange={({ target }) => setAuthor(target.value)} />
-        </div>
-        <div>
-          url: <input type="text" value={url} onChange={({ target }) => setUrl(target.value)} />
-        </div>
-        <button type="submit">create</button>
-      </form>
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  )
-}
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -110,6 +43,22 @@ const App = () => {
 
     window.localStorage.removeItem('user')
     blogService.setToken(null)
+  }
+
+  const handleBlogs = (blogObject) => {
+    if (blogObject.title === '' || blogObject.author === '' || blogObject.url === '') {
+      notify('One of the inputs is empty', 'error')
+      return
+    }
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        notify(`New blog added: ${returnedBlog.title} - by ${returnedBlog.author}`, 'alert')
+      })
+      .catch(ex => {
+        notify(ex, 'error')
+      })
   }
 
   // effect for fetching all blogs in the db
@@ -150,18 +99,19 @@ const App = () => {
       <Notification message={alertMsg} type={'alert'} />
       <Notification message={errorMsg} type={'error'} />
 
-      {user === null ? <LoginForm 
+      {user === null ? <LoginForm
         handleLogin={handleLogin}
         handleUsername={({ target }) => setUsername(target.value)}
         handlePassword={({ target }) => setPassword(target.value)}
         username={username}
         password={password} />
-        : <BlogList 
+        :
+          <BlogList
             notify={(msg, type) => notify(msg, type)}
-            username={user.username} 
-            blogs={blogs} 
+            username={user.username}
+            blogs={blogs}
             handleLogout={handleLogout}
-            handleBlogs={(newBlog) => setBlogs(blogs.concat(newBlog))} />}
+            handleBlogs={handleBlogs} />}
     </div>
   )
 }
