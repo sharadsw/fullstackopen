@@ -28,9 +28,11 @@ const App = () => {
         notify('Successfully logged in', 'alert')
         // add to local storage
         window.localStorage.setItem('user', JSON.stringify(loggedUser))
+        // set token in service
+        blogService.setToken(loggedUser.token)
       })
       .catch(err => {
-        console.log(err);
+        console.log(err)
         notify('Wrong username or password', 'error')
       })
   }
@@ -57,7 +59,7 @@ const App = () => {
         notify(`New blog added: ${returnedBlog.title} - by ${returnedBlog.author}`, 'alert')
       })
       .catch(ex => {
-        notify(ex, 'error')
+        console.log(ex)
       })
   }
 
@@ -106,12 +108,12 @@ const App = () => {
         username={username}
         password={password} />
         :
-          <BlogList
-            notify={(msg, type) => notify(msg, type)}
-            username={user.username}
-            blogs={blogs}
-            handleLogout={handleLogout}
-            handleBlogs={handleBlogs} />}
+        <BlogList
+          notify={(msg, type) => notify(msg, type)}
+          username={user.username}
+          blogs={blogs}
+          handleLogout={handleLogout}
+          handleBlogs={handleBlogs} />}
     </div>
   )
 }
