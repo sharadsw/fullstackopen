@@ -92,7 +92,7 @@ const BlogList = ({ username, blogs, handleLogout, handleBlogs, updateBlogs, del
       />
 
       <h2>blogs</h2>
-      {blogs.map(blog =>
+      {blogs.sort((b1, b2) => b2.likes - b1.likes).map(blog =>
         <Blog key={blog.id} blog={blog} updateBlogs={updateBlogs} username={username} deleteBlog={deleteBlog} />
       )}
     </div>

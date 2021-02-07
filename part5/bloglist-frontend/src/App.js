@@ -92,7 +92,7 @@ const App = () => {
   // effect for fetching all blogs in the db
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs.sort((b1, b2) => b2.likes - b1.likes))
+      setBlogs(blogs)
     )
   }, [])
 
