@@ -2,11 +2,47 @@ import React, { useState, useRef } from 'react'
 
 import Togglable from './Togglable'
 
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>
-)
+const Blog = ({ blog, updateBlogs, username, deleteBlog }) => {
+
+  const handleLikes = () => {
+    updateBlogs({
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: ++blog.likes
+    }, blog.id)
+  }
+
+  const handleDelete = () => {
+    deleteBlog(blog.id)
+  }
+
+  return (
+    <div className="blog">
+      <span>
+        {blog.title}
+      </span><br />
+      <span>
+        {blog.author}
+      </span><br />
+      <span>
+        {blog.url}
+      </span><br />
+      <span>
+        likes: <span className="likeCount">{blog.likes}</span>
+      </span>
+      <button onClick={handleLikes} id="likeButton">
+        like
+      </button>
+      <br />
+      {blog.user && username === blog.user.username &&
+        <button onClick={handleDelete}>
+          delete
+        </button>
+      }
+    </div>
+  )
+}
 
 const BlogForm = ({ handleBlogs }) => {
 
@@ -29,21 +65,21 @@ const BlogForm = ({ handleBlogs }) => {
     <Togglable showLabel='add blog' hideLabel='cancel' ref={blogFormToggle}>
       <form onSubmit={handleCreate}>
         <div>
-          title: <input type="text" value={title} onChange={({ target }) => setTitle(target.value)} />
+          title: <input type="text" value={title} onChange={({ target }) => setTitle(target.value)} id="title" />
         </div>
         <div>
-          author: <input type="text" value={author} onChange={({ target }) => setAuthor(target.value)} />
+          author: <input type="text" value={author} onChange={({ target }) => setAuthor(target.value)} id="author" />
         </div>
         <div>
-          url: <input type="text" value={url} onChange={({ target }) => setUrl(target.value)} />
+          url: <input type="text" value={url} onChange={({ target }) => setUrl(target.value)} id="url" />
         </div>
-        <button type="submit">create</button>
+        <button type="submit" id="createBlog">create</button>
       </form>
     </Togglable>
   )
 }
 
-const BlogList = ({ username, blogs, handleLogout, handleBlogs }) => {
+const BlogList = ({ username, blogs, handleLogout, handleBlogs, updateBlogs, deleteBlog }) => {
 
   return (
     <div>
@@ -57,7 +93,7 @@ const BlogList = ({ username, blogs, handleLogout, handleBlogs }) => {
 
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlogs={updateBlogs} username={username} deleteBlog={deleteBlog} />
       )}
     </div>
   )

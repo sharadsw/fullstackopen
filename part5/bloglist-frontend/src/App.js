@@ -55,8 +55,34 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
+        returnedBlog.user = {
+          username: ''
+        }
+        returnedBlog.user.username = user.username
         setBlogs(blogs.concat(returnedBlog))
         notify(`New blog added: ${returnedBlog.title} - by ${returnedBlog.author}`, 'alert')
+      })
+      .catch(ex => {
+        console.log(ex)
+      })
+  }
+
+  const updateBlogs = (blogObject, id) => {
+    blogService
+      .update(blogObject, id)
+      .then(updatedBlog => {
+        setBlogs(blogs.map(blog => blog.id === updatedBlog ? updatedBlog : blog))
+      })
+      .catch(ex => {
+        console.log(ex)
+      })
+  }
+
+  const deleteBlog = (id) => {
+    blogService
+      .remove(id)
+      .then(() => {
+        setBlogs(blogs.filter(blog => blog.id !== id))
       })
       .catch(ex => {
         console.log(ex)
@@ -66,7 +92,7 @@ const App = () => {
   // effect for fetching all blogs in the db
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort((b1, b2) => b2.likes - b1.likes))
     )
   }, [])
 
@@ -113,7 +139,9 @@ const App = () => {
           username={user.username}
           blogs={blogs}
           handleLogout={handleLogout}
-          handleBlogs={handleBlogs} />}
+          handleBlogs={handleBlogs} 
+          updateBlogs={updateBlogs}
+          deleteBlog={deleteBlog} />}
     </div>
   )
 }

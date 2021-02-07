@@ -54,3 +54,10 @@
   padding: 10px;
   border-radius: 5px;
 }
+
+.blog {
+  border: #282c34;
+  border-width: 2px;
+  border-style: solid;
+  margin-bottom: 2px;
+}
