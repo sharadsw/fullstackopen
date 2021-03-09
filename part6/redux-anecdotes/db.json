@@ -2,12 +2,12 @@
   "anecdotes": [
     {
       "content": "henlo",
-      "votes": 5,
+      "votes": 12,
       "id": "47145"
     },
     {
       "content": "yes",
-      "votes": 4,
+      "votes": 10,
       "id": "21149"
     },
     {
@@ -47,8 +47,18 @@
     },
     {
       "content": "redux thunk is lovely",
-      "votes": 1,
+      "votes": 3,
       "id": "g1949fz"
+    },
+    {
+      "content": "yes this is an anecdote",
+      "votes": 1,
+      "id": "DmMQFVs"
+    },
+    {
+      "content": "connect api",
+      "votes": 0,
+      "id": "xs8SXVS"
     }
   ]
 }

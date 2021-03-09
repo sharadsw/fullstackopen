@@ -1,5 +1,7 @@
 const initialState = ''
 
+let currentTimeout = null
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
@@ -17,7 +19,10 @@ export const setNotification = (msg, time) => {
       type: 'SET_NOTIFICATION',
       data: msg
     })
-    setTimeout(() => {
+    if (currentTimeout) {
+      clearTimeout(currentTimeout)
+    }
+    currentTimeout = setTimeout(() => {
       dispatch({
         type: 'CLEAR_NOTIFICATION'
       })
