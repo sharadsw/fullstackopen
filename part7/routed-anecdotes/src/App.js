@@ -4,6 +4,8 @@ import {
   Switch, Route, Link, useHistory, useRouteMatch
 } from "react-router-dom"
 
+import { useField } from "./hooks/index"
+
 const Menu = () => {
   const padding = {
     paddingRight: 5
@@ -61,20 +63,31 @@ const Footer = () => (
 const CreateNew = (props) => {
   const history = useHistory()
 
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  // const [content, setContent] = useState('')
+  // const [author, setAuthor] = useState('')
+  // const [info, setInfo] = useState('')
 
+  const content = useField("text")
+  const author = useField("text")
+  const info = useField("text")
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     history.push("/")
+  }
+
+  const removeReset = ({ reset, ...rest }) => rest
+
+  const resetValues = () => {
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -83,18 +96,19 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name='content' {...removeReset(content)} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' {...removeReset(author)} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input name='info' {...removeReset(info)} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
       </form>
+      <button onClick={resetValues}>reset</button>
     </div>
   )
 
@@ -106,7 +120,7 @@ const Notification = ({ message }) => {
   }
 
   return (
-    <div style={ { border: `2px solid black` } }>
+    <div style={{ border: `2px solid black` }}>
       {message}
     </div>
   )
@@ -141,7 +155,7 @@ const App = () => {
     setNotification(msg)
     notif = setTimeout(() => {
       setNotification("")
-    }, time*1000)
+    }, time * 1000)
   }
 
   const addNew = (anecdote) => {
