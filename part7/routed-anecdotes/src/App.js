@@ -82,7 +82,7 @@ const CreateNew = (props) => {
     history.push("/")
   }
 
-  const removeReset = ({ reset, ...rest }) => rest
+  const removeReset = ({ reset, ...inputProps }) => inputProps
 
   const resetValues = () => {
     content.reset()
