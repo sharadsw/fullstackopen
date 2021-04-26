@@ -86,7 +86,7 @@ const App = () => {
     //   .catch(ex => {
     //     console.log(ex)
     //   })
-    dispatch(addBlog(blogObject, user.username))
+    dispatch(addBlog(blogObject))
     notify(`New blog added: ${blogObject.title} - by ${blogObject.author}`, 'alert')
   }
 
@@ -128,7 +128,7 @@ const App = () => {
       dispatch(login(user))
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const notify = (msg, type) => {
     // if (type === 'alert') {

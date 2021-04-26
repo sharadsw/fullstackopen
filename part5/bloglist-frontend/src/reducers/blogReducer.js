@@ -7,8 +7,7 @@ const reducer = (state = [], action) => {
     case "UPDATE_BLOG":
       let blog = state.find(b => b.id === action.data.id)
       blog = {
-        ...action.data,
-        user: blog.user
+        ...action.data
       }
       return state.map(b => blog.id === b.id ? blog : b)
     case "DELETE_BLOG":
@@ -30,12 +29,9 @@ export const init = () => {
   }
 }
 
-export const addBlog = (blogObject, username) => {
+export const addBlog = (blogObject) => {
   return async dispatch => {
     const blog = await blogService.create(blogObject)
-    blog.user = {
-      username: username
-    }
     dispatch({
       type: "NEW_BLOG",
       data: blog
