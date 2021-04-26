@@ -98,5 +98,29 @@ blogsRouter.delete('/:id', async (request, response) => {
   response.status(204).end()
 })
 
+blogsRouter.post("/:id/comments", async (req, res) => {
+  const comment = req.body.comment
+  if (comment.trim() === "") {
+    res.status(401).json({
+      error: "empty comment"
+    })
+  }
+
+  const blog = await Blog.findById(req.params.id)
+  if (!blog) {
+    res.status(404).end()
+  }
+
+  const commentsToSave = {
+    comments: [...blog.comments, { comment }]
+  }
+  const result = await Blog.findByIdAndUpdate(req.params.id, commentsToSave, { new: true })
+  if (result) {
+    res.json(result)
+  } else {
+    res.status(404).end()
+  }
+})
+
 module.exports = blogsRouter
   

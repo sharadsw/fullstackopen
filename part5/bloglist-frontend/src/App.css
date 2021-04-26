@@ -61,3 +61,11 @@
   border-style: solid;
   margin-bottom: 2px;
 }
+
+.navbar {
+  background-color: beige;
+}
+
+.m5 {
+  margin: 5px;
+}
