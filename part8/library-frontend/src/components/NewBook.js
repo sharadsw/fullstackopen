@@ -1,41 +1,60 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries/queries'
-import { useMutation } from '@apollo/client'
+import {
+  ADD_BOOK,
+  ALL_AUTHORS,
+  ALL_BOOKS,
+  RECOMMENDED_BOOKS,
+} from "../queries/queries";
+import { useMutation } from "@apollo/client";
 
 const NewBook = (props) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuhtor] = useState('')
-  const [published, setPublished] = useState('')
-  const [genre, setGenre] = useState('')
-  const [genres, setGenres] = useState([])
+  const [title, setTitle] = useState("");
+  const [author, setAuhtor] = useState("");
+  const [published, setPublished] = useState("");
+  const [genre, setGenre] = useState("");
+  const [genres, setGenres] = useState([]);
 
   const [addBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [ { query: ALL_AUTHORS }, { query: ALL_BOOKS } ]
-  })
+    refetchQueries: [{ query: ALL_AUTHORS }, { query: RECOMMENDED_BOOKS }],
+    onError: (error) => {
+      console.log(error);
+    },
+    update: (store, response) => {
+      const newBook = response.data.addBook;
+      newBook.genres.forEach((g) => {
+        props.updateCacheWith(newBook, {
+          query: ALL_BOOKS,
+          variables: { genre: g },
+        });
+      });
+    },
+  });
 
   if (!props.show) {
-    return null
+    return null;
   }
 
   const submit = async (event) => {
-    event.preventDefault()
-    
-    console.log('add book...')
+    event.preventDefault();
 
-    addBook({ variables: { title, author, published: parseInt(published), genres } })
+    console.log("add book...");
 
-    setTitle('')
-    setPublished('')
-    setAuhtor('')
-    setGenres([])
-    setGenre('')
-  }
+    addBook({
+      variables: { title, author, published: parseInt(published), genres },
+    });
+
+    setTitle("");
+    setPublished("");
+    setAuhtor("");
+    setGenres([]);
+    setGenre("");
+  };
 
   const addGenre = () => {
-    setGenres(genres.concat(genre))
-    setGenre('')
-  }
+    setGenres(genres.concat(genre));
+    setGenre("");
+  };
 
   return (
     <div>
@@ -57,7 +76,7 @@ const NewBook = (props) => {
         <div>
           published
           <input
-            type='number'
+            type="number"
             value={published}
             onChange={({ target }) => setPublished(target.value)}
           />
@@ -67,15 +86,15 @@ const NewBook = (props) => {
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
           />
-          <button onClick={addGenre} type="button">add genre</button>
+          <button onClick={addGenre} type="button">
+            add genre
+          </button>
         </div>
-        <div>
-          genres: {genres.join(' ')}
-        </div>
-        <button type='submit'>create book</button>
+        <div>genres: {genres.join(" ")}</div>
+        <button type="submit">create book</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default NewBook
+export default NewBook;
